@@ -43,7 +43,7 @@ class SpatieMediaLibraryCroppie extends SpatieMediaLibraryFileUpload
         ]);
     }
 
-    public function hintAction(?Closure $action): static
+    public function hintAction(Action|Closure $action): static
     {
         $this->hintAction = $action;
         
@@ -56,7 +56,11 @@ class SpatieMediaLibraryCroppie extends SpatieMediaLibraryFileUpload
             return null;
         }
         
-        return $this->evaluate($this->hintAction);
+        if ($this->hintAction instanceof Closure) {
+            return $this->evaluate($this->hintAction);
+        }
+        
+        return $this->hintAction;
     }
 
     public function modalSize(string | Closure | null $modalSize): static
