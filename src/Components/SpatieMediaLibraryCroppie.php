@@ -4,6 +4,7 @@ namespace Sgntwrk\FilamentSpatieMediaLibraryCroppie\Components;
 
 use Closure;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Actions\Action;
 
 class SpatieMediaLibraryCroppie extends SpatieMediaLibraryFileUpload
 {
@@ -30,14 +31,32 @@ class SpatieMediaLibraryCroppie extends SpatieMediaLibraryFileUpload
     protected string | Closure $imageFormat = 'png';
 
     protected float | Closure $imageQuality = 0.9;
+    
+    protected ?Closure $hintAction = null;
 
-    public function getAcceptedFileTypes(): ?array
+    protected function setUp(): void
     {
-        $this->acceptedFileTypes([
-            "image/png"," image/gif","image/jpeg","image/webp"
-        ]);
+        parent::setUp();
 
-        return parent::getAcceptedFileTypes();
+        $this->acceptedFileTypes([
+            "image/png", "image/gif", "image/jpeg", "image/webp"
+        ]);
+    }
+
+    public function hintAction(?Closure $action): static
+    {
+        $this->hintAction = $action;
+        
+        return $this;
+    }
+
+    public function getHintAction(): ?Action
+    {
+        if (! $this->hintAction) {
+            return null;
+        }
+        
+        return $this->evaluate($this->hintAction);
     }
 
     public function modalSize(string | Closure | null $modalSize): static
